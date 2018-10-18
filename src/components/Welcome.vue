@@ -14,6 +14,7 @@
 
 <script>
 import store from '../store/store';
+import colors from '../assets/colors.json';
 
 export default {
   name: 'Welcome',
@@ -24,13 +25,14 @@ export default {
   },
   methods: {
     enterChat() {
-      if (this.userID) {
-        this.$router.push({ name: 'Chat', params: { userID: this.userID } });
+      if (this.userID && this.userColor) {
+        this.$router.push({ name: 'Chat', params: { userID: this.userID, userColor: this.userColor } });
       } else {
-        this.feedback = 'Hmmm.. userID not generated, fuck';
+        this.feedback = 'Hmmm.. userID or userColor not generated, fuck';
       }
     },
     setUser() {
+      // set user id
       let text = '';
       const idLength = 6;
       const possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
@@ -38,14 +40,20 @@ export default {
         text += possible.charAt(Math.floor(Math.random() * possible.length));
       }
       store.commit('setUserID', text);
+      // set user color
+      const userColor = colors[Math.floor(Math.random() * colors.length)];
+      store.commit('setUserColor', userColor);
     },
   },
-  mounted() {
+  created() {
     this.setUser();
   },
   computed: {
     userID() {
       return store.state.userID;
+    },
+    userColor() {
+      return store.state.userColor;
     },
   },
 };

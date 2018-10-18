@@ -13,7 +13,7 @@ import db from '@/firebase/init';
 
 export default {
   name: 'NewMessage',
-  props: ['userID'],
+  props: ['userID', 'userColor'],
   data() {
     return {
       newMessage: null,
@@ -27,6 +27,7 @@ export default {
           .add({
             content: this.newMessage,
             userID: this.userID,
+            userColor: this.userColor,
             timestamp: Date.now(),
           })
           .catch(err => {
