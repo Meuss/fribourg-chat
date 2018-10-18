@@ -9,16 +9,21 @@
         </div>
         <div class="card">
           <div class="card-content">
-            <ul class="messages" v-chat-scroll>
-              <li v-for="message in messages" :key="message.id">
-                <span class="black-text userID">{{ message.userID }}</span>
-                <span class="grey-text text-darken-3">{{ message.content }}</span>
-                <span class="grey-text time">{{ message.timestamp }}</span>
+            <ul class="messages collection" v-chat-scroll>
+              <li v-for="message in messages" :key="message.id" class="collection-item" :class="currentuser">
+                <div class="message-content">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="anonymous" viewBox="0 0 170.215 170.215">
+                    <path :style="{ fill: message.userColor }" d="M154.32 69.536h-23.452V45.767c0-21.46-15.234-40.283-36.224-44.756a45.438 45.438 0 0 0-19.074 0C54.581 5.484 39.347 24.307 39.347 45.768v23.769H15.895a4 4 0 0 0 0 8H154.32a4 4 0 0 0 0-8.001zm-61.343-60.7c17.32 3.691 29.892 19.223 29.892 36.932v11.01H47.347v-11.01c0-17.709 12.571-33.241 29.892-36.932a37.54 37.54 0 0 1 15.738 0zM129.41 126.139a4.002 4.002 0 0 0-4.299.667l-39.648 35.409h-.711l-39.648-35.409a3.996 3.996 0 0 0-4.299-.667 4.002 4.002 0 0 0-2.365 3.651v36.425a4 4 0 0 0 4 4H127.777a4 4 0 0 0 4-4V129.79a4.005 4.005 0 0 0-2.367-3.651zM57.495 115.586h6.999c8.43 0 15.456-6.051 16.706-14.387l1.563-10.421h4.688l1.563 10.421c1.25 8.336 8.276 14.387 16.706 14.387h6.999c8.716 0 15.942-6.54 16.81-15.212l1.759-17.597H38.927l1.759 17.597a16.839 16.839 0 0 0 16.809 15.212z"/>
+                  </svg>
+                  <!-- <span class="user" :style="{ backgroundColor: message.userColor }">{{ message.userID }}</span> -->
+                  <span class="grey-text text-darken-3">{{ message.content }}</span>
+                </div>
+                <div class="grey-text time">{{ message.timestamp }}</div>
               </li>
             </ul>
           </div>
           <div class="card-action">
-            <NewMessage :userID="userID" />
+            <NewMessage :userID="userID" :userColor="userColor" />
           </div>
         </div>
       </div>
@@ -34,13 +39,14 @@ import localization from 'moment/locale/fr';
 
 export default {
   name: 'Chat',
-  props: ['userID'],
+  props: ['userID', 'userColor'],
   components: {
     NewMessage,
   },
   data() {
     return {
       messages: [],
+      currentuser: this.userID,
     };
   },
   created() {
@@ -52,6 +58,7 @@ export default {
           this.messages.push({
             id: doc.id,
             userID: doc.data().userID,
+            userColor: doc.data().userColor,
             content: doc.data().content,
             timestamp: moment(doc.data().timestamp)
               .locale('fr', localization)
@@ -76,16 +83,45 @@ export default {
     font-size: 2.6em;
     margin-bottom: 35px;
   }
+  .collection .collection-item {
+    padding: 5px 10px;
+  }
+  .anonymous {
+    width: 30px;
+    height: 30px;
+    margin: 0 0.5rem 0.1rem 0;
+    border-radius: 2px;
+    box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 3px 1px -2px rgba(0, 0, 0, 0.12), 0 1px 5px 0 rgba(0, 0, 0, 0.2);
+  }
+  .message-content {
+    display: flex;
+    align-items: flex-start;
+    span {
+      padding-top: 0.4rem;
+      max-width: calc(100% - 40px);
+      word-wrap: break-word;
+    }
+  }
   span {
-    font-size: 1.4em;
+    font-size: 1.2em;
+    &.user {
+      min-width: 70px;
+      padding: 5px 4px;
+      margin: 1rem 0 0.1rem 0;
+      border-radius: 2px;
+      box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 3px 1px -2px rgba(0, 0, 0, 0.12), 0 1px 5px 0 rgba(0, 0, 0, 0.2);
+      color: white;
+      display: inline-block;
+      font-weight: bold;
+      font-size: 1em;
+    }
   }
   .time {
-    display: block;
     font-size: 0.8em;
   }
 }
 .messages {
-  max-height: 300px;
+  max-height: 800px;
   overflow: auto;
   display: flex;
   flex-direction: column;
