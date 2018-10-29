@@ -12,15 +12,17 @@
             <ul class="messages collection" v-chat-scroll>
               <li v-for="message in messages" :key="message.id" class="collection-item" :style="[ message.currentuser ? { boxShadow: `2px 0px 0px 0px inset ${message.userColor}` } : '']"> <!-- not ok -->
                 <div class="message-content">
-                  <v-popover offset="16">
+                  <v-popover offset="0">
                     <svg xmlns="http://www.w3.org/2000/svg" class="anonymous tooltip-target" viewBox="0 0 170.215 170.215">
                       <path :style="{ fill: message.userColor }" d="M154.32 69.536h-23.452V45.767c0-21.46-15.234-40.283-36.224-44.756a45.438 45.438 0 0 0-19.074 0C54.581 5.484 39.347 24.307 39.347 45.768v23.769H15.895a4 4 0 0 0 0 8H154.32a4 4 0 0 0 0-8.001zm-61.343-60.7c17.32 3.691 29.892 19.223 29.892 36.932v11.01H47.347v-11.01c0-17.709 12.571-33.241 29.892-36.932a37.54 37.54 0 0 1 15.738 0zM129.41 126.139a4.002 4.002 0 0 0-4.299.667l-39.648 35.409h-.711l-39.648-35.409a3.996 3.996 0 0 0-4.299-.667 4.002 4.002 0 0 0-2.365 3.651v36.425a4 4 0 0 0 4 4H127.777a4 4 0 0 0 4-4V129.79a4.005 4.005 0 0 0-2.367-3.651zM57.495 115.586h6.999c8.43 0 15.456-6.051 16.706-14.387l1.563-10.421h4.688l1.563 10.421c1.25 8.336 8.276 14.387 16.706 14.387h6.999c8.716 0 15.942-6.54 16.81-15.212l1.759-17.597H38.927l1.759 17.597a16.839 16.839 0 0 0 16.809 15.212z"/>
                     </svg>
                     <template slot="popover">
                       <div class="actions">
-                        <div class="btn blue">reply to #{{message.userID}}</div>
+                        user: {{message.userID}}
+                        <div class="btn blue" @click="startReply(message.userID);">
+                          <i class ="material-icons">reply</i>
+                        </div>
                       </div>
-                      <a v-close-popover class="btn red">Close</a>
                     </template>
                   </v-popover>
                   <span class="grey-text text-darken-3">{{ message.content }}</span>
@@ -210,6 +212,11 @@ p {
     .btn {
       margin-top: 10px;
     }
+  }
+}
+span {
+  &:focus {
+    outline: 0;
   }
 }
 </style>
